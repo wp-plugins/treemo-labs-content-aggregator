@@ -1,6 +1,6 @@
 <?php
 
-class JSON_API_Comment {
+class TREEMO_JSON_API_Comment {
   
   var $id;      // Integer
   var $name;    // String
@@ -10,7 +10,7 @@ class JSON_API_Comment {
   var $parent;  // Integer
   var $author;  // Object (only if the user was registered & logged in)
   
-  function JSON_API_Comment($wp_comment = null) {
+  function TREEMO_JSON_API_Comment($wp_comment = null) {
     if ($wp_comment) {
       $this->import_wp_object($wp_comment);
     }
@@ -31,7 +31,7 @@ class JSON_API_Comment {
     //$this->raw = $wp_comment;
     
     if (!empty($wp_comment->user_id)) {
-      $this->author = new JSON_API_Author($wp_comment->user_id);
+      $this->author = new TREEMO_JSON_API_Author($wp_comment->user_id);
     } else {
       unset($this->author);
     }
@@ -71,7 +71,7 @@ class JSON_API_Comment {
   function comment_post_redirect() {
     global $comment, $treemo_json_api;
     $status = ($comment->comment_approved) ? 'ok' : 'pending';
-    $new_comment = new JSON_API_Comment($comment);
+    $new_comment = new TREEMO_JSON_API_Comment($comment);
     $treemo_json_api->response->respond($new_comment, $status);
   }
   

@@ -1,6 +1,6 @@
 <?php
 
-class JSON_API_Response {
+class TREEMO_JSON_API_Response {
   
   function setup() {
     global $treemo_json_api;

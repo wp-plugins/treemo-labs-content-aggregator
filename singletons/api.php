@@ -1,11 +1,11 @@
 <?php
 
-class JSON_API {
+class TREEMO_JSON_API {
   
   function __construct() {
-    $this->query = new JSON_API_Query();
-    $this->introspector = new JSON_API_Introspector();
-    $this->response = new JSON_API_Response();
+    $this->query = new TREEMO_JSON_API_Query();
+    $this->introspector = new TREEMO_JSON_API_Introspector();
+    $this->response = new TREEMO_JSON_API_Response();
     add_action('template_redirect', array(&$this, 'template_redirect'));
     add_action('admin_menu', array(&$this, 'admin_menu'));
     add_action('update_option_treemo_json_api_base', array(&$this, 'flush_rewrite_rules'));
@@ -286,8 +286,8 @@ class JSON_API {
   }
   
   function controller_is_active($controller) {
-    if (defined('JSON_API_CONTROLLERS')) {
-      $default = JSON_API_CONTROLLERS;
+    if (defined('TREEMO_JSON_API_CONTROLLERS')) {
+      $default = TREEMO_TREEMO_JSON_API_CONTROLLERS;
     } else {
       $default = 'core';
     }

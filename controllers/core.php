@@ -4,7 +4,7 @@ Controller name: Core
 Controller description: Basic introspection methods
 */
 
-class JSON_API_Core_Controller {
+class TREEMO_JSON_API_Core_Controller {
   
   public function info() {
     global $treemo_json_api;
@@ -66,7 +66,7 @@ class JSON_API_Core_Controller {
       $post = $posts[0];
       $previous = get_adjacent_post(false, '', true);
       $next = get_adjacent_post(false, '', false);
-      $post = new JSON_API_Post($post);
+      $post = new TREEMO_JSON_API_Post($post);
       $response = array(
         'post' => $post
       );
@@ -249,7 +249,7 @@ class JSON_API_Core_Controller {
       'numberposts' => $numberposts
     ));
     foreach ($wp_posts as $wp_post) {
-      $pages[] = new JSON_API_Post($wp_post);
+      $pages[] = new TREEMO_JSON_API_Post($wp_post);
     }
     foreach ($pages as $page) {
       $treemo_json_api->introspector->attach_child_posts($page);
@@ -319,7 +319,7 @@ class JSON_API_Core_Controller {
   
   protected function posts_object_result($posts, $object) {
     global $wp_query;
-    // Convert something like "JSON_API_Category" into "category"
+    // Convert something like "TREEMO_JSON_API_Category" into "category"
     $object_key = strtolower(substr(get_class($object), 9));
     return array(
       'count' => count($posts),

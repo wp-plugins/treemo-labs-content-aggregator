@@ -1,6 +1,6 @@
 <?php
 
-class JSON_API_Attachment {
+class TREEMO_JSON_API_Attachment {
   
   var $id;          // Integer
   var $url;         // String
@@ -11,7 +11,7 @@ class JSON_API_Attachment {
   var $parent;      // Integer
   var $mime_type;   // String
   
-  function JSON_API_Attachment($wp_attachment = null) {
+  function TREEMO_JSON_API_Attachment($wp_attachment = null) {
     if ($wp_attachment) {
       $this->import_wp_object($wp_attachment);
       if ($this->is_image()) {

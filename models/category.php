@@ -1,6 +1,6 @@
 <?php
 
-class JSON_API_Category {
+class TREEMO_JSON_API_Category {
   
   var $id;          // Integer
   var $slug;        // String
@@ -9,7 +9,7 @@ class JSON_API_Category {
   var $parent;      // Integer
   var $post_count;  // Integer
   
-  function JSON_API_Category($wp_category = null) {
+  function TREEMO_JSON_API_Category($wp_category = null) {
     if ($wp_category) {
       $this->import_wp_object($wp_category);
     }

@@ -1,6 +1,6 @@
 <?php
 
-class JSON_API_Author {
+class TREEMO_JSON_API_Author {
   
   var $id;          // Integer
   var $slug;        // String
@@ -12,10 +12,10 @@ class JSON_API_Author {
   var $description; // String
   
   // Note:
-  //   JSON_API_Author objects can include additional values by using the
+  //   TREEMO_JSON_API_Author objects can include additional values by using the
   //   author_meta query var.
   
-  function JSON_API_Author($id = null) {
+  function TREEMO_JSON_API_Author($id = null) {
     if ($id) {
       $this->id = (int) $id;
     } else {

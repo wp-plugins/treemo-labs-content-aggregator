@@ -1,9 +1,9 @@
 <?php
 
-class JSON_API_Post {
+class TREEMO_JSON_API_Post {
   
   // Note:
-  //   JSON_API_Post objects must be instantiated within The Loop.
+  //   TREEMO_JSON_API_Post objects must be instantiated within The Loop.
   
   var $id;              // Integer
   var $type;            // String
@@ -27,7 +27,7 @@ class JSON_API_Post {
   var $thumbnail;       // String
   var $custom_fields;   // Object (included by using custom_fields query var)
   
-  function JSON_API_Post($wp_post = null) {
+  function TREEMO_JSON_API_Post($wp_post = null) {
     if (!empty($wp_post)) {
       $this->import_wp_object($wp_post);
     }
@@ -115,7 +115,7 @@ class JSON_API_Post {
       include_once ABSPATH . '/wp-admin/includes/media.php';
       include_once ABSPATH . '/wp-admin/includes/image.php';
       $attachment_id = media_handle_upload('attachment', $this->id);
-      $this->attachments[] = new JSON_API_Attachment($attachment_id);
+      $this->attachments[] = new TREEMO_JSON_API_Attachment($attachment_id);
       unset($_FILES['attachment']);
     }
     
@@ -182,7 +182,7 @@ class JSON_API_Post {
       $this->categories = array();
       if ($wp_categories = get_the_category($this->id)) {
         foreach ($wp_categories as $wp_category) {
-          $category = new JSON_API_Category($wp_category);
+          $category = new TREEMO_JSON_API_Category($wp_category);
           if ($category->id == 1 && $category->slug == 'uncategorized') {
             // Skip the 'uncategorized' category
             continue;
@@ -201,7 +201,7 @@ class JSON_API_Post {
       $this->tags = array();
       if ($wp_tags = get_the_tags($this->id)) {
         foreach ($wp_tags as $wp_tag) {
-          $this->tags[] = new JSON_API_Tag($wp_tag);
+          $this->tags[] = new TREEMO_JSON_API_Tag($wp_tag);
         }
       }
     } else {
@@ -212,7 +212,7 @@ class JSON_API_Post {
   function set_author_value($author_id) {
     global $treemo_json_api;
     if ($treemo_json_api->include_value('author')) {
-      $this->author = new JSON_API_Author($author_id);
+      $this->author = new TREEMO_JSON_API_Author($author_id);
     } else {
       unset($this->author);
     }

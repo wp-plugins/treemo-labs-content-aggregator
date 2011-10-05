@@ -26,12 +26,12 @@ function treemo_json_api_init() {
     add_action('admin_notices', 'treemo_json_api_php_version_warning');
     return;
   }
-  if (!class_exists('JSON_API')) {
+  if (!class_exists('TREEMO_JSON_API')) {
     add_action('admin_notices', 'treemo_json_api_class_warning');
     return;
   }
   add_filter('rewrite_rules_array', 'treemo_json_api_rewrites');
-  $treemo_json_api = new JSON_API();
+  $treemo_json_api = new TREEMO_JSON_API();
 }
 
 function treemo_json_api_php_version_warning() {
@@ -39,7 +39,7 @@ function treemo_json_api_php_version_warning() {
 }
 
 function treemo_json_api_class_warning() {
-  echo "<div id=\"json-api-warning\" class=\"updated fade\"><p>Oops, JSON_API class not found. If you've defined a JSON_API_DIR constant, double check that the path is correct.</p></div>";
+  echo "<div id=\"json-api-warning\" class=\"updated fade\"><p>Oops, TREEMO_JSON_API class not found. If you've defined a TREEMO_JSON_API_DIR constant, double check that the path is correct.</p></div>";
 }
 
 function treemo_json_api_activation() {
@@ -68,8 +68,8 @@ function treemo_json_api_rewrites($wp_rules) {
 }
 
 function treemo_json_api_dir() {
-  if (defined('JSON_API_DIR') && file_exists(JSON_API_DIR)) {
-    return JSON_API_DIR;
+  if (defined('TREEMO_JSON_API_DIR') && file_exists(TREEMO_JSON_API_DIR)) {
+    return TREEMO_JSON_API_DIR;
   } else {
     return dirname(__FILE__);
   }

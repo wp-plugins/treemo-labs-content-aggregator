@@ -1,6 +1,6 @@
 <?php
 
-class JSON_API_Introspector {
+class TREEMO_JSON_API_Introspector {
   
   public function get_posts($query = false, $wp_posts = false) {
     global $post;
@@ -11,7 +11,7 @@ class JSON_API_Introspector {
       if ($wp_posts) {
         $output[] = $post;
       } else {
-        $output[] = new JSON_API_Post($post);
+        $output[] = new TREEMO_JSON_API_Post($post);
       }
     }
     return $output;
@@ -180,7 +180,7 @@ class JSON_API_Introspector {
     if (!$id) {
       return null;
     }
-    return new JSON_API_Author($id);
+    return new TREEMO_JSON_API_Author($id);
   }
   
   public function get_author_by_login($login) {
@@ -205,7 +205,7 @@ class JSON_API_Introspector {
     ", $post_id));
     $comments = array();
     foreach ($wp_comments as $wp_comment) {
-      $comments[] = new JSON_API_Comment($wp_comment);
+      $comments[] = new TREEMO_JSON_API_Comment($wp_comment);
     }
     return $comments;
   }
@@ -220,7 +220,7 @@ class JSON_API_Introspector {
     $attachments = array();
     if (!empty($wp_attachments)) {
       foreach ($wp_attachments as $wp_attachment) {
-        $attachments[] = new JSON_API_Attachment($wp_attachment);
+        $attachments[] = new TREEMO_JSON_API_Attachment($wp_attachment);
       }
     }
     return $attachments;
@@ -235,7 +235,7 @@ class JSON_API_Introspector {
       'orderby' => 'menu_order'
     ));
     foreach ($wp_children as $wp_post) {
-      $post->children[] = new JSON_API_Post($wp_post);
+      $post->children[] = new TREEMO_JSON_API_Post($wp_post);
     }
     foreach ($post->children as $child) {
       $this->attach_child_posts($child);
@@ -246,14 +246,14 @@ class JSON_API_Introspector {
     if (!$wp_category) {
       return null;
     }
-    return new JSON_API_Category($wp_category);
+    return new TREEMO_JSON_API_Category($wp_category);
   }
   
   protected function get_tag_object($wp_tag) {
     if (!$wp_tag) {
       return null;
     }
-    return new JSON_API_Tag($wp_tag);
+    return new TREEMO_JSON_API_Tag($wp_tag);
   }
   
   protected function is_active_author($author) {

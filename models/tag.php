@@ -1,13 +1,13 @@
 <?php
 
-class JSON_API_Tag {
+class TREEMO_JSON_API_Tag {
   
   var $id;          // Integer
   var $slug;        // String
   var $title;       // String
   var $description; // String
   
-  function JSON_API_Tag($wp_tag = null) {
+  function TREEMO_JSON_API_Tag($wp_tag = null) {
     if ($wp_tag) {
       $this->import_wp_object($wp_tag);
     }

@@ -1,6 +1,6 @@
 <?php
 
-class JSON_API_Query {
+class TREEMO_JSON_API_Query {
   
   // Default values
   protected $defaults = array(
@@ -111,15 +111,15 @@ class JSON_API_Query {
   	}
   	  	
   	if (get_query_var('after_date')) {
-  	  $where .= " AND $search_type >= '".JSON_API_Query::mysqldate_from(get_query_var('after_date'))."'";
+  	  $where .= " AND $search_type >= '".TREEMO_JSON_API_Query::mysqldate_from(get_query_var('after_date'))."'";
   	}
   		
   	if (get_query_var('before_date')) {
-  	  $where .= " AND $search_type <= '".JSON_API_Query::mysqldate_from(get_query_var('before_date'))."'";
+  	  $where .= " AND $search_type <= '".TREEMO_JSON_API_Query::mysqldate_from(get_query_var('before_date'))."'";
   	}
   	
   	if ($search_type == 'post_modified_gmt' && get_query_var('posted_before')) {
-  	  $where .= " AND post_date_gmt <= '".JSON_API_Query::mysqldate_from(get_query_var('posted_before'))."'";
+  	  $where .= " AND post_date_gmt <= '".TREEMO_JSON_API_Query::mysqldate_from(get_query_var('posted_before'))."'";
   	}
   	  	
   	return $where;
@@ -199,7 +199,7 @@ class JSON_API_Query {
     if (empty($method)) {
       // Case 1: we're not being invoked (done!)
       return false;
-    } else if (method_exists("JSON_API_{$controller}_Controller", $method)) {
+    } else if (method_exists("TREEMO_JSON_API_{$controller}_Controller", $method)) {
       // Case 2: an explicit method was specified
       return $method;
     } else if ($controller == 'core') {
