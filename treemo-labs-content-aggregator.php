@@ -43,6 +43,10 @@ function treemo_json_api_class_warning() {
 }
 
 function treemo_json_api_activation() {
+  if (class_exists('JSON_API')) {
+    wp_die("<h1>This plugin is not compatible with the JSON API plugin</h1><p> Please first deactivate the JSON API before activating this plugin.</p>", "Error activating plugin", array('back_link'=>true));
+  }
+
   // Add the rewrite rule on activation
   global $wp_rewrite;
   add_filter('rewrite_rules_array', 'treemo_json_api_rewrites');
