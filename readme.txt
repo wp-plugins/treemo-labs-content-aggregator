@@ -4,7 +4,7 @@ Original Author: dphiffer
 Tags: treemo labs
 Requires at least: 2.8
 Tested up to: 3.2.1
-Stable tag: 0.7.6
+Stable tag: 0.7.6.1
 
 === Modifications From Original Plugin ===
 * singletons/query.php   
