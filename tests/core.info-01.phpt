@@ -11,4 +11,4 @@ echo $response['body'];
 
 ?>
 --EXPECT--
-{"status":"ok","json_api_version":"1.0.7","controllers":["core","posts","respond"]}
+{"status":"ok","treemo_json_api_version":"1.0.7","controllers":["core","posts","respond"]}

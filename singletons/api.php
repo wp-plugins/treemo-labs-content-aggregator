@@ -8,15 +8,15 @@ class JSON_API {
     $this->response = new JSON_API_Response();
     add_action('template_redirect', array(&$this, 'template_redirect'));
     add_action('admin_menu', array(&$this, 'admin_menu'));
-    add_action('update_option_json_api_base', array(&$this, 'flush_rewrite_rules'));
-    add_action('pre_update_option_json_api_controllers', array(&$this, 'update_controllers'));
+    add_action('update_option_treemo_json_api_base', array(&$this, 'flush_rewrite_rules'));
+    add_action('pre_update_option_treemo_json_api_controllers', array(&$this, 'update_controllers'));
   }
   
   function template_redirect() {
     // Check to see if there's an appropriate API controller + method    
     $controller = strtolower($this->query->get_controller());
     $available_controllers = $this->get_controllers();
-    $enabled_controllers = explode(',', get_option('json_api_controllers', 'core'));
+    $enabled_controllers = explode(',', get_option('treemo_json_api_controllers', 'core'));
     $active_controllers = array_intersect($available_controllers, $enabled_controllers);
     
     if ($controller) {
@@ -43,7 +43,7 @@ class JSON_API {
         $this->response->setup();
         
         // Run action hooks for method
-        do_action("json_api-{$controller}-$method");
+        do_action("treemo_json_api-{$controller}-$method");
         
         // Error out if nothing is found
         if ($method == '404') {
@@ -72,7 +72,7 @@ class JSON_API {
     }
     
     $available_controllers = $this->get_controllers();
-    $active_controllers = explode(',', get_option('json_api_controllers', 'core'));
+    $active_controllers = explode(',', get_option('treemo_json_api_controllers', 'core'));
     
     if (count($active_controllers) == 1 && empty($active_controllers[0])) {
       $active_controllers = array();
@@ -105,10 +105,10 @@ class JSON_API {
             }
           }
         }
-        $this->save_option('json_api_controllers', implode(',', $active_controllers));
+        $this->save_option('treemo_json_api_controllers', implode(',', $active_controllers));
       }
-      if (isset($_REQUEST['json_api_base'])) {
-        $this->save_option('json_api_base', $_REQUEST['json_api_base']);
+      if (isset($_REQUEST['treemo_json_api_base'])) {
+        $this->save_option('treemo_json_api_base', $_REQUEST['treemo_json_api_base']);
       }
     }
     
@@ -205,7 +205,7 @@ class JSON_API {
     <table class="form-table">
       <tr valign="top">
         <th scope="row">API base</th>
-        <td><code><?php bloginfo('url'); ?>/</code><input type="text" name="json_api_base" value="<?php echo get_option('json_api_base', 'api'); ?>" size="15" /></td>
+        <td><code><?php bloginfo('url'); ?>/</code><input type="text" name="treemo_json_api_base" value="<?php echo get_option('treemo_json_api_base', 'api'); ?>" size="15" /></td>
       </tr>
     </table>
     <?php if (!get_option('permalink_structure', '')) { ?>
@@ -239,7 +239,7 @@ class JSON_API {
   
   function get_method_url($controller, $method, $options = '') {
     $url = get_bloginfo('url');
-    $base = get_option('json_api_base', 'api');
+    $base = get_option('treemo_json_api_base', 'api');
     $permalink_structure = get_option('permalink_structure', '');
     if (!empty($options) && is_array($options)) {
       $args = array();
@@ -274,14 +274,14 @@ class JSON_API {
   
   function get_controllers() {
     $controllers = array();
-    $dir = json_api_dir();
+    $dir = treemo_json_api_dir();
     $dh = opendir("$dir/controllers");
     while ($file = readdir($dh)) {
       if (preg_match('/(.+)\.php$/', $file, $matches)) {
         $controllers[] = $matches[1];
       }
     }
-    $controllers = apply_filters('json_api_controllers', $controllers);
+    $controllers = apply_filters('treemo_json_api_controllers', $controllers);
     return array_map('strtolower', $controllers);
   }
   
@@ -291,7 +291,7 @@ class JSON_API {
     } else {
       $default = 'core';
     }
-    $active_controllers = explode(',', get_option('json_api_controllers', $default));
+    $active_controllers = explode(',', get_option('treemo_json_api_controllers', $default));
     return (in_array($controller, $active_controllers));
   }
   
@@ -336,11 +336,11 @@ class JSON_API {
   }
   
   function controller_class($controller) {
-    return "json_api_{$controller}_controller";
+    return "treemo_json_api_{$controller}_controller";
   }
   
   function controller_path($controller) {
-    $dir = json_api_dir();
+    $dir = treemo_json_api_dir();
     $controller_class = $this->controller_class($controller);
     return apply_filters("{$controller_class}_path", "$dir/controllers/$controller.php");
   }
@@ -348,7 +348,7 @@ class JSON_API {
   function get_nonce_id($controller, $method) {
     $controller = strtolower($controller);
     $method = strtolower($method);
-    return "json_api-$controller-$method";
+    return "treemo_json_api-$controller-$method";
   }
   
   function flush_rewrite_rules() {

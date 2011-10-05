@@ -50,7 +50,7 @@ class JSON_API_Post {
   }
   
   function save($values = null) {
-    global $json_api, $user_ID;
+    global $treemo_json_api, $user_ID;
     
     $wp_values = array();
     
@@ -75,7 +75,7 @@ class JSON_API_Post {
     }
     
     if (!empty($values['author'])) {
-      $author = $json_api->introspector->get_author_by_login($values['author']);
+      $author = $treemo_json_api->introspector->get_author_by_login($values['author']);
       $wp_values['post_author'] = $author->id;
     }
     
@@ -83,7 +83,7 @@ class JSON_API_Post {
       $categories = explode(',', $values['categories']);
       foreach ($categories as $category_slug) {
         $category_slug = trim($category_slug);
-        $category = $json_api->introspector->get_category_by_slug($category_slug);
+        $category = $treemo_json_api->introspector->get_category_by_slug($category_slug);
         if (empty($wp_values['post_category'])) {
           $wp_values['post_category'] = array($category->id);
         } else {
@@ -126,8 +126,8 @@ class JSON_API_Post {
   }
   
   function import_wp_object($wp_post) {
-    global $json_api, $post;
-    $date_format = $json_api->query->date_format;
+    global $treemo_json_api, $post;
+    $date_format = $treemo_json_api->query->date_format;
     $this->id = (int) $wp_post->ID;
     setup_postdata($wp_post);
     $this->set_value('type', $wp_post->post_type);
@@ -152,8 +152,8 @@ class JSON_API_Post {
   }
   
   function set_value($key, $value) {
-    global $json_api;
-    if ($json_api->include_value($key)) {
+    global $treemo_json_api;
+    if ($treemo_json_api->include_value($key)) {
       $this->$key = $value;
     } else {
       unset($this->$key);
@@ -161,9 +161,9 @@ class JSON_API_Post {
   }
     
   function set_content_value() {
-    global $json_api, $more;
-    if ($json_api->include_value('content')) {
-      $content = get_the_content($json_api->query->read_more);
+    global $treemo_json_api, $more;
+    if ($treemo_json_api->include_value('content')) {
+      $content = get_the_content($treemo_json_api->query->read_more);
       $content = apply_filters('the_content', $content);
       $content = str_replace(']]>', ']]&gt;', $content);
       $this->content_read_more = $content;
@@ -177,8 +177,8 @@ class JSON_API_Post {
   }
   
   function set_categories_value() {
-    global $json_api;
-    if ($json_api->include_value('categories')) {
+    global $treemo_json_api;
+    if ($treemo_json_api->include_value('categories')) {
       $this->categories = array();
       if ($wp_categories = get_the_category($this->id)) {
         foreach ($wp_categories as $wp_category) {
@@ -196,8 +196,8 @@ class JSON_API_Post {
   }
   
   function set_tags_value() {
-    global $json_api;
-    if ($json_api->include_value('tags')) {
+    global $treemo_json_api;
+    if ($treemo_json_api->include_value('tags')) {
       $this->tags = array();
       if ($wp_tags = get_the_tags($this->id)) {
         foreach ($wp_tags as $wp_tag) {
@@ -210,8 +210,8 @@ class JSON_API_Post {
   }
   
   function set_author_value($author_id) {
-    global $json_api;
-    if ($json_api->include_value('author')) {
+    global $treemo_json_api;
+    if ($treemo_json_api->include_value('author')) {
       $this->author = new JSON_API_Author($author_id);
     } else {
       unset($this->author);
@@ -219,26 +219,26 @@ class JSON_API_Post {
   }
   
   function set_comments_value() {
-    global $json_api;
-    if ($json_api->include_value('comments')) {
-      $this->comments = $json_api->introspector->get_comments($this->id);
+    global $treemo_json_api;
+    if ($treemo_json_api->include_value('comments')) {
+      $this->comments = $treemo_json_api->introspector->get_comments($this->id);
     } else {
       unset($this->comments);
     }
   }
   
   function set_attachments_value() {
-    global $json_api;
-    if ($json_api->include_value('attachments')) {
-      $this->attachments = $json_api->introspector->get_attachments($this->id);
+    global $treemo_json_api;
+    if ($treemo_json_api->include_value('attachments')) {
+      $this->attachments = $treemo_json_api->introspector->get_attachments($this->id);
     } else {
       unset($this->attachments);
     }
   }
   
   function set_thumbnail_value() {
-    global $json_api;
-    if (!$json_api->include_value('thumbnail') ||
+    global $treemo_json_api;
+    if (!$treemo_json_api->include_value('thumbnail') ||
         !function_exists('get_post_thumbnail_id')) {
       unset($this->thumbnail);
       return;
@@ -254,10 +254,10 @@ class JSON_API_Post {
   }
   
   function set_custom_fields_value() {
-    global $json_api;
-    if ($json_api->include_value('custom_fields') &&
-        $json_api->query->custom_fields) {
-      $keys = explode(',', $json_api->query->custom_fields);
+    global $treemo_json_api;
+    if ($treemo_json_api->include_value('custom_fields') &&
+        $treemo_json_api->query->custom_fields) {
+      $keys = explode(',', $treemo_json_api->query->custom_fields);
       $wp_custom_fields = get_post_custom($this->id);
       $this->custom_fields = new stdClass();
       foreach ($keys as $key) {
@@ -271,9 +271,9 @@ class JSON_API_Post {
   }
   
   function get_thumbnail_size() {
-    global $json_api;
-    if ($json_api->query->thumbnail_size) {
-      return $json_api->query->thumbnail_size;
+    global $treemo_json_api;
+    if ($treemo_json_api->query->thumbnail_size) {
+      return $treemo_json_api->query->thumbnail_size;
     } else if (function_exists('get_intermediate_image_sizes')) {
       $sizes = get_intermediate_image_sizes();
       if (in_array('post-thumbnail', $sizes)) {

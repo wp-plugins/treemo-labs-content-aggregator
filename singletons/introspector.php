@@ -79,8 +79,8 @@ class JSON_API_Introspector {
   }
   
   public function get_current_category() {
-    global $json_api;
-    extract($json_api->query->get(array('id', 'slug', 'category_id', 'category_slug')));
+    global $treemo_json_api;
+    extract($treemo_json_api->query->get(array('id', 'slug', 'category_id', 'category_slug')));
     if ($id || $category_id) {
       if (!$id) {
         $id = $category_id;
@@ -92,7 +92,7 @@ class JSON_API_Introspector {
       }
       return $this->get_category_by_slug($slug);
     } else {
-      $json_api->error("Include 'id' or 'slug' var in your request.");
+      $treemo_json_api->error("Include 'id' or 'slug' var in your request.");
     }
     return null;
   }
@@ -113,8 +113,8 @@ class JSON_API_Introspector {
   }
   
   public function get_current_tag() {
-    global $json_api;
-    extract($json_api->query->get(array('id', 'slug', 'tag_id', 'tag_slug')));
+    global $treemo_json_api;
+    extract($treemo_json_api->query->get(array('id', 'slug', 'tag_id', 'tag_slug')));
     if ($id || $tag_id) {
       if (!$id) {
         $id = $tag_id;
@@ -126,7 +126,7 @@ class JSON_API_Introspector {
       }
       return $this->get_tag_by_slug($slug);
     } else {
-      $json_api->error("Include 'id' or 'slug' var in your request.");
+      $treemo_json_api->error("Include 'id' or 'slug' var in your request.");
     }
     return null;
   }
@@ -157,8 +157,8 @@ class JSON_API_Introspector {
   }
   
   public function get_current_author() {
-    global $json_api;
-    extract($json_api->query->get(array('id', 'slug', 'author_id', 'author_slug')));
+    global $treemo_json_api;
+    extract($treemo_json_api->query->get(array('id', 'slug', 'author_id', 'author_slug')));
     if ($id || $author_id) {
       if (!$id) {
         $id = $author_id;
@@ -170,7 +170,7 @@ class JSON_API_Introspector {
       }
       return $this->get_author_by_login($slug);
     } else {
-      $json_api->error("Include 'id' or 'slug' var in your request.");
+      $treemo_json_api->error("Include 'id' or 'slug' var in your request.");
     }
     return null;
   }
@@ -269,7 +269,7 @@ class JSON_API_Introspector {
   }
   
   protected function set_posts_query($query = false) {
-    global $json_api, $wp_query;
+    global $treemo_json_api, $wp_query;
     
     if (!$query) {
       $query = array();
@@ -277,16 +277,16 @@ class JSON_API_Introspector {
     
     $query = array_merge($query, $wp_query->query);
     
-    if ($json_api->query->page) {
-      $query['paged'] = $json_api->query->page;
+    if ($treemo_json_api->query->page) {
+      $query['paged'] = $treemo_json_api->query->page;
     }
     
-    if ($json_api->query->count) {
-      $query['posts_per_page'] = $json_api->query->count;
+    if ($treemo_json_api->query->count) {
+      $query['posts_per_page'] = $treemo_json_api->query->count;
     }
     
-    if ($json_api->query->post_type) {
-      $query['post_type'] = $json_api->query->post_type;
+    if ($treemo_json_api->query->post_type) {
+      $query['post_type'] = $treemo_json_api->query->post_type;
     }
     
     if (!empty($query)) {

@@ -154,18 +154,18 @@ class JSON_API_Query {
   }
   
   function get_legacy_controller($json) {
-    global $json_api;
+    global $treemo_json_api;
     if ($json == 'submit_comment') {
-      if ($json_api->controller_is_active('respond')) {
+      if ($treemo_json_api->controller_is_active('respond')) {
         return 'respond';
       } else {
-        $json_api->error("The 'submit_comment' method has been removed from the Core controller. To use this method you must enable the Respond controller from WP Admin > Settings > JSON API.");
+        $treemo_json_api->error("The 'submit_comment' method has been removed from the Core controller. To use this method you must enable the Respond controller from WP Admin > Settings > JSON API.");
       }
     } else if ($json == 'create_post') {
-      if ($json_api->controller_is_active('posts')) {
+      if ($treemo_json_api->controller_is_active('posts')) {
         return 'posts';
       } else {
-        $json_api->error("The 'create_post' method has been removed from the Core controller. To use this method you must enable the Posts controller from WP Admin > Settings > JSON API.");
+        $treemo_json_api->error("The 'create_post' method has been removed from the Core controller. To use this method you must enable the Posts controller from WP Admin > Settings > JSON API.");
       }
     } else {
       return 'core';
@@ -174,7 +174,7 @@ class JSON_API_Query {
   
   function get_method($controller) {
     
-    global $json_api;
+    global $treemo_json_api;
     
     // Returns an appropriate API method name or false. Four possible outcomes:
     //   1. API isn't being invoked at all (return false)
@@ -208,7 +208,7 @@ class JSON_API_Query {
         return 'get_search_results';
       } else if (is_home()) {
         if (empty($_GET['json'])) {
-          $json_api->error("Uknown method '$method'.");
+          $treemo_json_api->error("Uknown method '$method'.");
         }
         return 'get_recent_posts';
       } else if (is_page()) {

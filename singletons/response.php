@@ -3,15 +3,15 @@
 class JSON_API_Response {
   
   function setup() {
-    global $json_api;
+    global $treemo_json_api;
     $this->include_values = array();
     $this->exclude_values = array();
-    if ($json_api->query->include) {
-      $this->include_values = explode(',', $json_api->query->include);
+    if ($treemo_json_api->query->include) {
+      $this->include_values = explode(',', $treemo_json_api->query->include);
     }
     // Props to ikesyo for submitting a fix!
-    if ($json_api->query->exclude) {
-      $this->exclude_values = explode(',', $json_api->query->exclude);
+    if ($treemo_json_api->query->exclude) {
+      $this->exclude_values = explode(',', $treemo_json_api->query->exclude);
       $this->include_values = array_diff($this->include_values, $this->exclude_values);
     }
     
@@ -28,7 +28,7 @@ class JSON_API_Response {
       $data = array_merge(array('status' => $status), $data);
     }
     
-    $data = apply_filters('json_api_encode', $data);
+    $data = apply_filters('treemo_json_api_encode', $data);
     
     if (function_exists('json_encode')) {
       // Use the built-in json_encode function if it's available
@@ -36,7 +36,7 @@ class JSON_API_Response {
     } else {
       // Use PEAR's Services_JSON encoder otherwise
       if (!class_exists('Services_JSON')) {
-        $dir = json_api_dir();
+        $dir = treemo_json_api_dir();
         require_once "$dir/library/JSON.php";
       }
       $json = new Services_JSON();
@@ -58,10 +58,10 @@ class JSON_API_Response {
   }
   
   function respond($result, $status = 'ok') {
-    global $json_api;
+    global $treemo_json_api;
     $json = $this->get_json($result, $status);
     $status_redirect = "redirect_$status";
-    if ($json_api->query->dev || !empty($_REQUEST['dev'])) {
+    if ($treemo_json_api->query->dev || !empty($_REQUEST['dev'])) {
       // Output the result in a human-redable format
       if (!headers_sent()) {
         header('HTTP/1.1 200 OK');
@@ -72,12 +72,12 @@ class JSON_API_Response {
       echo $this->prettify($json);
     } else if (!empty($_REQUEST[$status_redirect])) {
       wp_redirect($_REQUEST[$status_redirect]);
-    } else if ($json_api->query->redirect) {
-      $url = $this->add_status_query_var($json_api->query->redirect, $status);
+    } else if ($treemo_json_api->query->redirect) {
+      $url = $this->add_status_query_var($treemo_json_api->query->redirect, $status);
       wp_redirect($url);
-    } else if ($json_api->query->callback) {
+    } else if ($treemo_json_api->query->callback) {
       // Run a JSONP-style callback with the result
-      $this->callback($json_api->query->callback, $json);
+      $this->callback($treemo_json_api->query->callback, $json);
     } else {
       // Output the result
       $this->output($json);

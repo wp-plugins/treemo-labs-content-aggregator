@@ -40,8 +40,8 @@ class JSON_API_Author {
   }
   
   function set_author_meta() {
-    global $json_api;
-    if (!$json_api->query->author_meta) {
+    global $treemo_json_api;
+    if (!$treemo_json_api->query->author_meta) {
       return;
     }
     $protected_vars = array(
@@ -50,7 +50,7 @@ class JSON_API_Author {
       'user_email',
       'user_activation_key'
     );
-    $vars = explode(',', $json_api->query->author_meta);
+    $vars = explode(',', $treemo_json_api->query->author_meta);
     $vars = array_diff($vars, $protected_vars);
     foreach ($vars as $var) {
       $this->set_value($var);

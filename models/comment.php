@@ -17,9 +17,9 @@ class JSON_API_Comment {
   }
   
   function import_wp_object($wp_comment) {
-    global $json_api;
+    global $treemo_json_api;
     
-    $date_format = $json_api->query->date_format;
+    $date_format = $treemo_json_api->query->date_format;
     $content = apply_filters('comment_text', $wp_comment->comment_content);
     
     $this->id = (int) $wp_comment->comment_ID;
@@ -54,25 +54,25 @@ class JSON_API_Comment {
   }
   
   function comment_id_not_found() {
-    global $json_api;
-    $json_api->error("Post ID '{$_REQUEST['post_id']}' not found.");
+    global $treemo_json_api;
+    $treemo_json_api->error("Post ID '{$_REQUEST['post_id']}' not found.");
   }
   
   function comment_closed() {
-    global $json_api;
-    $json_api->error("Post is closed for comments.");
+    global $treemo_json_api;
+    $treemo_json_api->error("Post is closed for comments.");
   }
   
   function comment_on_draft() {
-    global $json_api;
-    $json_api->error("You cannot comment on unpublished posts.");
+    global $treemo_json_api;
+    $treemo_json_api->error("You cannot comment on unpublished posts.");
   }
   
   function comment_post_redirect() {
-    global $comment, $json_api;
+    global $comment, $treemo_json_api;
     $status = ($comment->comment_approved) ? 'ok' : 'pending';
     $new_comment = new JSON_API_Comment($comment);
-    $json_api->response->respond($new_comment, $status);
+    $treemo_json_api->response->respond($new_comment, $status);
   }
   
 }
