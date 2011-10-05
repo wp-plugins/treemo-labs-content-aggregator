@@ -56,7 +56,7 @@ function treemo_json_api_deactivation() {
 }
 
 function treemo_json_api_rewrites($wp_rules) {
-  $base = get_option('treemo_json_api_base', 'api');
+  $base = get_option('treemo_json_api_base', 'treemo_api');
   if (empty($base)) {
     return $wp_rules;
   }
