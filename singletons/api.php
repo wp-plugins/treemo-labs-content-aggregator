@@ -205,7 +205,7 @@ class TREEMO_JSON_API {
     <table class="form-table">
       <tr valign="top">
         <th scope="row">API base</th>
-        <td><code><?php bloginfo('url'); ?>/</code><input type="text" name="treemo_json_api_base" value="<?php echo get_option('treemo_json_api_base', 'treemo_api'); ?>" size="15" /></td>
+        <td><code><?php bloginfo('url'); ?>/</code><input type="text" name="treemo_json_api_base" value="<?php echo get_option('treemo_json_api_base', 'api'); ?>" size="15" /></td>
       </tr>
     </table>
     <?php if (!get_option('permalink_structure', '')) { ?>
@@ -239,7 +239,7 @@ class TREEMO_JSON_API {
   
   function get_method_url($controller, $method, $options = '') {
     $url = get_bloginfo('url');
-    $base = get_option('treemo_json_api_base', 'treemo_api');
+    $base = get_option('treemo_json_api_base', 'api');
     $permalink_structure = get_option('permalink_structure', '');
     if (!empty($options) && is_array($options)) {
       $args = array();
