@@ -289,6 +289,10 @@ class TREEMO_JSON_API_Introspector {
       $query['post_type'] = $treemo_json_api->query->post_type;
     }
     
+    if ($treemo_json_api->query->post_status == 'deleted') {
+      $query['post_status'] = array('trash');
+    }
+    
     if (!empty($query)) {
       query_posts($query);
     }
