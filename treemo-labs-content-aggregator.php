@@ -9,7 +9,7 @@ Original Author: Dan Phiffer
 */
 
 // @TODO Define default
-define(DEFAULT_AGGREGATOR_NOTIFICATION_API, '');
+define(DEFAULT_AGGREGATOR_NOTIFICATION_API, 'http://complex.josh.dw2.treemo.com/test/notify');
 
 $dir = treemo_json_api_dir();
 @include_once "$dir/singletons/api.php";
@@ -46,25 +46,26 @@ function treemo_json_api_class_warning() {
 }
 
 function treemo_api_notify_mothership($action, $params = array()) {
-	$mothership = get_option('treemo_json_api_notification_api' DEFAULT_AGGREGATOR_NOTIFICATION_API);
-	if (empty($mothership))
-		return false;
+  $mothership = get_option('treemo_json_api_notification_api', DEFAULT_AGGREGATOR_NOTIFICATION_API);
+  if (empty($mothership))
+    return false;
+
+  if (preg_match('/^\s*Version:\s*(.+)$/m', file_get_contents(__FILE__), $matches)) {
+    $params['version'] = $matches[1];
+  } else {
+    $params['version'] = '(Unknown)';
+  }
+  $params['secret'] = get_option('treemo_json_api_secret');
+  $params['api_url'] = get_bloginfo('url').'/'.get_option('treemo_json_api_base', 'api');
+  $params['action'] = $action;
 	
-	$core = new TREEMO_JSON_API_Core_Controller();
-	$info = $core->info();
-	$params['secret'] = get_option('treemo_json_api_secret');
-	$params['version'] = $info['treemo_json_api_version'];
-	$params['api_url'] = bloginfo('url').'/'.get_option('treemo_json_api_base', 'api');
-	
-	$ch  = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_HEADER, 0);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1");
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
-    curl_exec($ch);
-    curl_close($ch);
+  $ch  = curl_init($mothership);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_HEADER, 0);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+  $result = curl_exec($ch);
+  curl_close($ch);
 }
 
 function treemo_json_api_activation() {
@@ -78,9 +79,9 @@ function treemo_json_api_activation() {
   
   // Notify Aggregator that this node is now online and you should start syncing
   $params = array(
-  	'public_url' => bloginfo('url'),
-  	'description' => bloginfo('description'),
-  	'name' => bloginfo('name')
+  	'public_url' => get_bloginfo('url'),
+  	'description' => get_bloginfo('description'),
+  	'name' => get_bloginfo('name')
   );
   treemo_api_notify_mothership('register', $params);
 
@@ -116,36 +117,12 @@ function treemo_json_api_dir() {
   }
 }
 
-function treemo_json_api_action_save_post(post_id) {
+function treemo_json_api_notify_post($post_id) {
   $post = get_post($post_id);
   $params = array(
 	'slug' => $post->post_name
   );
-  treemo_api_notify_mothership('save_post', $params);
-}
-
-function treemo_json_api_action_deleted_post(post_id) {
-  $post = get_post($post_id);
-  $params = array(
-  	'slug' => $post->post_name
-  );
-  treemo_api_notify_mothership('deleted_post', $params);
-}
-
-function treemo_json_api_action_trashed_post(post_id) {
-  $post = get_post($post_id);
-  $params = array(
-  	'slug' => $post->post_name
-  );
-  treemo_api_notify_mothership('trashed_post', $params);
-}
-
-function treemo_json_api_action_untrashed_post($post_id) {
-  $post = get_post($post_id);
-  $params = array(
-  	'slug' => $post->post_name
-  );
-  treemo_api_notify_mothership('untrashed_post', $params);
+  treemo_api_notify_mothership('article_updated', $params);
 }
 
 // Add initialization and activation hooks
@@ -154,9 +131,9 @@ register_activation_hook("$dir/treemo-labs-content-aggregator.php", 'treemo_json
 register_deactivation_hook("$dir/treemo-labs-content-aggregator.php", 'treemo_json_api_deactivation');
 
 // Add hooks for when a post is published, modified or moved to the trash to notify the aggregator
-add_action('save_post', 'treemo_json_api_action_save_post');
-add_action('deleted_post', 'treemo_json_api_action_deleted_post');
-add_action('trashed_post', 'treemo_json_api_action_trashed_post');
-add_action('untrashed_post', 'treemo_json_api_action_untrashed_post');
+add_action('save_post', 'treemo_json_api_notify_post');
+add_action('deleted_post', 'treemo_json_api_notify_post');
+add_action('trashed_post', 'treemo_json_api_notify_post');
+add_action('untrashed_post', 'treemo_json_api_notify_post');
 
 ?>

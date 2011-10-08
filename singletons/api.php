@@ -114,7 +114,6 @@ class TREEMO_JSON_API {
         $this->save_option('treemo_json_api_notification_api', $_REQUEST['treemo_json_api_notification_api']);
       }
     }
-    
     ?>
 <div class="wrap">
   <div id="icon-options-general" class="icon32"><br /></div>
