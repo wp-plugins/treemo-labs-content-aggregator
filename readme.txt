@@ -2,7 +2,7 @@
 Contributors: joshs633
 Original Author: dphiffer
 Tags: treemo labs
-Requires at least: 2.8
+Requires at least: 2.9
 Tested up to: 3.2.1
 Stable tag: 0.7.7.5
 

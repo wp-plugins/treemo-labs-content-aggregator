@@ -110,6 +110,9 @@ class TREEMO_JSON_API {
       if (isset($_REQUEST['treemo_json_api_base'])) {
         $this->save_option('treemo_json_api_base', $_REQUEST['treemo_json_api_base']);
       }
+      if (isset($_REQUEST['treemo_json_api_notification_api'])) {
+        $this->save_option('treemo_json_api_notification_api', $_REQUEST['treemo_json_api_notification_api']);
+      }
     }
     
     ?>
@@ -206,6 +209,14 @@ class TREEMO_JSON_API {
       <tr valign="top">
         <th scope="row">API base</th>
         <td><code><?php bloginfo('url'); ?>/</code><input type="text" name="treemo_json_api_base" value="<?php echo get_option('treemo_json_api_base', 'api'); ?>" size="15" /></td>
+      </tr>
+    </table>
+    <h3>Notification API</h3>
+    <p>By specifying a notification api url, the content aggregator will be informed of changes when they happen. This will make sure that all of your posts are included and updated in the aggregator as quickly as possible. If this is not set, there may be considerable lag between when you create, update or delete a post and when this change is reflected in the aggregator.</p>
+    <table class="form-table">
+      <tr valign="top">
+        <th scope="row">Notification API</th>
+        <td><input type="text" name="treemo_json_api_notification_api" value="<?php echo get_option('treemo_json_api_notification_api', DEFAULT_AGGREGATOR_NOTIFICATION_API); ?>" size="35" /></td>
       </tr>
     </table>
     <?php if (!get_option('permalink_structure', '')) { ?>
