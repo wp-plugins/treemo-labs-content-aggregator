@@ -117,12 +117,15 @@ function treemo_json_api_dir() {
   }
 }
 
-function treemo_json_api_notify_post($post_id) {
-  $post = get_post($post_id);
-  $params = array(
-	'slug' => $post->post_name
-  );
-  treemo_api_notify_mothership('article_updated', $params);
+function treemo_json_api_notify_post_status($new_status, $old_status, $post) {
+  if ($new_status == 'publish' || $old_status == 'publish') {
+    $params = array(
+	  'slug' => $post->post_name,
+	  'new_status' => $new_status,
+	  'old_status' => $old_status
+    );
+    treemo_api_notify_mothership('publish_change', $params);
+  }
 }
 
 // Add initialization and activation hooks
@@ -131,9 +134,6 @@ register_activation_hook("$dir/treemo-labs-content-aggregator.php", 'treemo_json
 register_deactivation_hook("$dir/treemo-labs-content-aggregator.php", 'treemo_json_api_deactivation');
 
 // Add hooks for when a post is published, modified or moved to the trash to notify the aggregator
-add_action('save_post', 'treemo_json_api_notify_post');
-add_action('deleted_post', 'treemo_json_api_notify_post');
-add_action('trashed_post', 'treemo_json_api_notify_post');
-add_action('untrashed_post', 'treemo_json_api_notify_post');
+add_action('transition_post_status', 'treemo_json_api_notify_post_status', 10, 3);
 
 ?>
