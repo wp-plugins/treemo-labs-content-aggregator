@@ -189,6 +189,12 @@ class TREEMO_JSON_API_Query {
     //     * http://example.org/2009/11/?json=1 (get_date_posts)
     //     * http://example.org/category/foo?json=1 (get_category_posts)
     
+    if ($this->get('secret') != get_option('treemo_json_api_secret')) {
+    	global $treemo_json_api;
+    	$treemo_json_api->error("Incorrect secret supplied with request.");
+    	return false;
+    }
+    
     $method = $this->get('json');
     if (strpos($method, '/') !== false) {
       $method = substr($method, strpos($method, '/') + 1);
