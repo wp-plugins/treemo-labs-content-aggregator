@@ -81,7 +81,8 @@ function treemo_json_api_activation() {
   $params = array(
   	'public_url' => get_bloginfo('url'),
   	'description' => get_bloginfo('description'),
-  	'name' => get_bloginfo('name')
+  	'name' => get_bloginfo('name'),
+	'platform' => 'wordpress'
   );
   treemo_api_notify_mothership('register', $params);
 
