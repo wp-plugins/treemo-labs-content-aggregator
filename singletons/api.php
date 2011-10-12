@@ -112,6 +112,7 @@ class TREEMO_JSON_API {
       }
       if (isset($_REQUEST['treemo_json_api_notification_api'])) {
         $this->save_option('treemo_json_api_notification_api', $_REQUEST['treemo_json_api_notification_api']);
+        treemo_json_api_register_mothership();
       }
     }
     ?>

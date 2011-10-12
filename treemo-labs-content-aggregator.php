@@ -56,6 +56,14 @@ function treemo_api_notify_mothership($action, $params = array()) {
     $params['version'] = '(Unknown)';
   }
   $params['secret'] = get_option('treemo_json_api_secret');
+  
+  if (empty($params['secret'])) {
+  	// Create a secret for safe communiction between Aggregator and WP Instance
+  	$secret = md5(microtime(true)+rand());
+  	add_option('treemo_json_api_secret', $secret);
+  	$params['secret'] = $secret;
+  }
+  
   $params['api_url'] = get_bloginfo('url').'/'.get_option('treemo_json_api_base', 'api');
   $params['action'] = $action;
 	
@@ -67,28 +75,29 @@ function treemo_api_notify_mothership($action, $params = array()) {
   $result = curl_exec($ch);
   curl_close($ch);
   $json = @json_decode($result);
+  //wp_die(print_r($json, true));
   if ($json && !empty($json->error)) {
     wp_die("<h1>Treemo Labs Content Aggregator Fatal Error</h1><p>{$json->error}</p>", "Error", array('back_link'=>true));
   }
+}
+
+function treemo_json_api_register_mothership() {
+	// Notify Aggregator that this node is now online and you should start syncing
+	$params = array(
+		'public_url' => get_bloginfo('url'),
+		'description' => get_bloginfo('description'),
+		'name' => get_bloginfo('name'),
+		'platform' => 'wordpress'
+	);
+	treemo_api_notify_mothership('register', $params);
 }
 
 function treemo_json_api_activation() {
   if (class_exists('JSON_API')) {
     wp_die("<h1>This plugin is not compatible with the JSON API plugin</h1><p> Please first deactivate the JSON API before activating this plugin.</p>", "Error activating plugin", array('back_link'=>true));
   }
-  
-  // Create a secret for safe communiction between Aggregator and WP Instance
-  $secret = md5(microtime(true)+rand());
-  add_option('treemo_json_api_secret', $secret);
-  
-  // Notify Aggregator that this node is now online and you should start syncing
-  $params = array(
-  	'public_url' => get_bloginfo('url'),
-  	'description' => get_bloginfo('description'),
-  	'name' => get_bloginfo('name'),
-	'platform' => 'wordpress'
-  );
-  treemo_api_notify_mothership('register', $params);
+
+  treemo_json_api_register_mothership();
 
   // Add the rewrite rule on activation
   global $wp_rewrite;
