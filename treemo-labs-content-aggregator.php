@@ -3,7 +3,7 @@
 Plugin Name: Treemo Labs Content Aggregator
 Plugin URI: http://wordpress.org/extend/plugins/treemo-labs-content-aggregator/
 Description: Required plugin to participate in the Treemo Labs Content Aggregation platform.
-Version: 0.7.7.5
+Version: 0.7.8
 Modifications By: Josh Schumacher
 Original Author: Dan Phiffer
 */
@@ -66,6 +66,10 @@ function treemo_api_notify_mothership($action, $params = array()) {
   curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
   $result = curl_exec($ch);
   curl_close($ch);
+  $json = @json_decode($result);
+  if ($json && !empty($json->error)) {
+    wp_die("<h1>Treemo Labs Content Aggregator Fatal Error</h1><p>{$json->error}</p>", "Error", array('back_link'=>true));
+  }
 }
 
 function treemo_json_api_activation() {
