@@ -1,22 +1,24 @@
 === Treemo Labs Content Aggregator ===
 Contributors: joshs633
 Original Author: dphiffer
-Tags: treemo labs
+Tags: treemo labs, api, aggregation
 Requires at least: 2.9
 Tested up to: 3.2.1
-Stable tag: 0.9
+Stable tag: 0.9.1
 
 
 == Original Documentation ==
 http://wordpress.org/extend/plugins/json-api/other_notes/
 
+== Features ==
+* A `secret` is required for all communication
+* Registers with a central notification api on activation. You can modify or remove the notification api in the plugin settings. When you modify the api url in the plugin settings, the plugin automatically registers with the new server.
+* Request is sent to the notification api when a post is published, published post is modified or a post is unpublished
+* Bulk requests to fetch posts between two dates
+* Bulk requests to fetch posts modified between two dates
+* Bulk requests to fetch posts deleted between two dates
 
-== Notes For Syncing Articles ==
-= Sample Query =
-*   Get new posts between timeframe `http://blog.joshschumacher.com/api/get_recent_posts/?exclude=comments&post_type=post&author_meta=email&before_date=1256335180&after_date=1240561966&dev=1`
-    
-= Sync Process =
-*   Updates
-   *   Get content updated since the last sync time but posted before the last sync time and updated before start of this sync time
-   *   Get content modified since X and the status has changed from published to remove deleted content
-   *   Example: Get posts modified between now and yesterday but originally posted before yesterday `http://blog.joshschumacher.com/api/get_recent_posts/?dev=1&exclude=comments&post_type=post&author_meta=email&before_date=now&after_date=yesterday&search_type=modified&posted_before=yesterday`
+== Issues ==
+* Production Notification API Server is not live, currently pointed at a developement version
+* Does not correctly notify notification api after version upgrades
+* Documentation needed for aggregator protocol
