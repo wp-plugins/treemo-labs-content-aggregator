@@ -3,13 +3,13 @@
 Plugin Name: Treemo Labs Content Aggregator
 Plugin URI: http://wordpress.org/extend/plugins/treemo-labs-content-aggregator/
 Description: Required plugin to participate in the Treemo Labs Content Aggregation platform.
-Version: 0.7.8
+Version: 0.9
 Modifications By: Josh Schumacher
 Original Author: Dan Phiffer
 */
 
 // @TODO Define default
-define(DEFAULT_AGGREGATOR_NOTIFICATION_API, 'http://complex.josh.dw2.treemo.com/test/notify');
+define(DEFAULT_AGGREGATOR_NOTIFICATION_API, 'http://complex.josh.dw2.treemo.com/aggregator/notify');
 
 $dir = treemo_json_api_dir();
 @include_once "$dir/singletons/api.php";
@@ -75,14 +75,14 @@ function treemo_api_notify_mothership($action, $params = array()) {
   $result = curl_exec($ch);
   curl_close($ch);
   $json = @json_decode($result);
-  //wp_die(print_r($json, true));
+
   if ($json && !empty($json->error)) {
     wp_die("<h1>Treemo Labs Content Aggregator Fatal Error</h1><p>{$json->error}</p>", "Error", array('back_link'=>true));
   }
 }
 
+// Notify Aggregator that this node is now online and you should start syncing
 function treemo_json_api_register_mothership() {
-	// Notify Aggregator that this node is now online and you should start syncing
 	$params = array(
 		'public_url' => get_bloginfo('url'),
 		'description' => get_bloginfo('description'),
@@ -134,9 +134,9 @@ function treemo_json_api_dir() {
 function treemo_json_api_notify_post_status($new_status, $old_status, $post) {
   if ($new_status == 'publish' || $old_status == 'publish') {
     $params = array(
-	  'slug' => $post->post_name,
 	  'new_status' => $new_status,
-	  'old_status' => $old_status
+	  'old_status' => $old_status,
+	  'post_id' => $post->ID
     );
     treemo_api_notify_mothership('publish_change', $params);
   }
